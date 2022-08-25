@@ -43,9 +43,9 @@ class HiveBase extends LocalDataSourceAbstract {
     }
   }
 
-  static bool _allBoxesOpened() {
+  static bool _noneBoxOpened() {
     for (Box<dynamic> box in _boxes.values) {
-      if (!Hive.isBoxOpen(box.name)) {
+      if (Hive.isBoxOpen(box.name)) {
         return false;
       }
     }
@@ -54,12 +54,12 @@ class HiveBase extends LocalDataSourceAbstract {
 
   static Future<void> init(
       {required String securityKey, required Map<Type, TypeAdapter<dynamic>> typeToTypeAdapters}) async {
-    _registerBoxes(types: typeToTypeAdapters.keys);
-    if (_allBoxesOpened()) {
+    if (_noneBoxOpened()) {
       await Hive.initFlutter();
       _registerAdapters(typeToTypeAdapter: typeToTypeAdapters);
       await _openBoxesSecurely(
           typeNames: typeToTypeAdapters.keys.map((e) => e.runtimeType.toString()), securityKey: securityKey);
+      _registerBoxes(types: typeToTypeAdapters.keys);
     }
   }
 
