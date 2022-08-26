@@ -6,6 +6,6 @@
 
 * Fixed boxes not opening properly.
 
-## 0.0.3
+## 0.0.4
 
 * Removed dynamic type for TypeAdapters.
