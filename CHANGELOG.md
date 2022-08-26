@@ -24,4 +24,8 @@
 
 ## 0.0.8
 
-box names saved instead of types.
+* Box names saved instead of types.
+
+## 0.0.9
+
+* Saving String instead of runtimeType.
