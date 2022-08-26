@@ -13,3 +13,7 @@
 ## 0.0.5
 
 * Moved to builder flow since registering dynamic type adapters doesn't work.
+
+## 0.0.6
+
+* Properly opens boxes now.
