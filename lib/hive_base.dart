@@ -43,12 +43,12 @@ class HiveBase extends LocalDataSourceAbstract {
 
   static void registerAdapter<T>({required TypeAdapter<T> adapter}) {
     Hive.registerAdapter<T>(adapter);
-    _boxNames.add(T.runtimeType.toString());
+    _boxNames.add(T.toString());
   }
 
   static Future<void> init() async => await Hive.initFlutter();
 
-  Box<dynamic>? _getProperBox<T>() => Hive.box(T.runtimeType.toString());
+  Box<dynamic>? _getProperBox<T>() => Hive.box(T.toString());
 
   @override
   Future<int> addItemOfType<T>(T item) async {
