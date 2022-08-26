@@ -9,7 +9,7 @@ class HiveBase extends LocalDataSourceAbstract {
     return _hiveBase;
   }
 
-  static final Map<Type, Box<dynamic>> _boxes = {};
+  static final Iterable<Type> _boxes = [];
 
   ///Securely opens each box with the same encryption key.
   static Future<void> openBoxes({required String? securityKey}) async {
@@ -27,13 +27,13 @@ class HiveBase extends LocalDataSourceAbstract {
         await secureStorage.write(key: securityKey, value: key);
       }
       final decoded64 = base64Decode(key);
-      for (String name in _boxes.keys.map((e) => e.toString())) {
+      for (String name in _boxes.map((e) => e.toString())) {
         if (!Hive.isBoxOpen(name)) {
           await Hive.openBox(name, encryptionCipher: HiveAesCipher(decoded64));
         }
       }
     } else {
-      for (String name in _boxes.keys.map((e) => e.toString())) {
+      for (String name in _boxes.map((e) => e.toString())) {
         if (!Hive.isBoxOpen(name)) {
           await Hive.openBox(name);
         }
@@ -43,12 +43,11 @@ class HiveBase extends LocalDataSourceAbstract {
 
   static void registerAdapter<T>({required TypeAdapter<T> adapter}) {
     Hive.registerAdapter<T>(adapter);
-    _boxes[T.runtimeType] = Hive.box(T.runtimeType.toString());
   }
 
   static Future<void> init() async => await Hive.initFlutter();
 
-  Box<dynamic>? _getProperBox<T>() => _boxes[T.runtimeType];
+  Box<dynamic>? _getProperBox<T>() => Hive.box(T.runtimeType.toString());
 
   @override
   Future<int> addItemOfType<T>(T item) async {
