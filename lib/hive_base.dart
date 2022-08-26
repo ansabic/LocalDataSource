@@ -11,56 +11,42 @@ class HiveBase extends LocalDataSourceAbstract {
 
   static final Map<Type, Box<dynamic>> _boxes = {};
 
-  static void _registerBoxes({required Iterable<Type> types}) {
-    for (Type type in types) {
-      _boxes[type] = Hive.box(type.runtimeType.toString());
-    }
-  }
-
   ///Securely opens each box with the same encryption key.
-  static Future<void> _openBoxesSecurely({required String securityKey, required Iterable<String> typeNames}) async {
-    const secureStorage = FlutterSecureStorage();
-    String? key;
-    if (await secureStorage.containsKey(key: securityKey)) {
-      key = await secureStorage.read(key: securityKey);
+  static Future<void> openBoxes({required String? securityKey}) async {
+    if (securityKey != null) {
+      const secureStorage = FlutterSecureStorage();
+      String? key;
+      if (await secureStorage.containsKey(key: securityKey)) {
+        key = await secureStorage.read(key: securityKey);
+      } else {
+        key = base64Encode(Hive.generateSecureKey());
+        await secureStorage.write(key: securityKey, value: key);
+      }
+      if (key == null) {
+        key = base64Encode(Hive.generateSecureKey());
+        await secureStorage.write(key: securityKey, value: key);
+      }
+      final decoded64 = base64Decode(key);
+      for (String name in _boxes.keys.map((e) => e.toString())) {
+        if (!Hive.isBoxOpen(name)) {
+          await Hive.openBox(name, encryptionCipher: HiveAesCipher(decoded64));
+        }
+      }
     } else {
-      key = base64Encode(Hive.generateSecureKey());
-      await secureStorage.write(key: securityKey, value: key);
-    }
-    if (key == null) {
-      key = base64Encode(Hive.generateSecureKey());
-      await secureStorage.write(key: securityKey, value: key);
-    }
-    final decoded64 = base64Decode(key);
-    for (String name in typeNames) {
-      await Hive.openBox(name, encryptionCipher: HiveAesCipher(decoded64));
-    }
-  }
-
-  static void _registerAdapters({required Map<Type, TypeAdapter> typeToTypeAdapter}) {
-    for (MapEntry<Type, TypeAdapter> entry in typeToTypeAdapter.entries) {
-      Hive.registerAdapter(entry.value);
-    }
-  }
-
-  static bool _noneBoxOpened() {
-    for (Box<dynamic> box in _boxes.values) {
-      if (Hive.isBoxOpen(box.name)) {
-        return false;
+      for (String name in _boxes.keys.map((e) => e.toString())) {
+        if (!Hive.isBoxOpen(name)) {
+          await Hive.openBox(name);
+        }
       }
     }
-    return true;
   }
 
-  static Future<void> init({required String securityKey, required Map<Type, TypeAdapter> typeToTypeAdapters}) async {
-    if (_noneBoxOpened()) {
-      await Hive.initFlutter();
-      _registerAdapters(typeToTypeAdapter: typeToTypeAdapters);
-      await _openBoxesSecurely(
-          typeNames: typeToTypeAdapters.keys.map((e) => e.runtimeType.toString()), securityKey: securityKey);
-      _registerBoxes(types: typeToTypeAdapters.keys);
-    }
+  static void registerAdapter<T>({required TypeAdapter<T> adapter}) {
+    Hive.registerAdapter<T>(adapter);
+    _boxes[T.runtimeType] = Hive.box(T.runtimeType.toString());
   }
+
+  static Future<void> init() async => await Hive.initFlutter();
 
   Box<dynamic>? _getProperBox<T>() => _boxes[T.runtimeType];
 
