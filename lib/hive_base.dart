@@ -37,8 +37,8 @@ class HiveBase extends LocalDataSourceAbstract {
     }
   }
 
-  static void _registerAdapters({required Map<Type, TypeAdapter<dynamic>> typeToTypeAdapter}) {
-    for (MapEntry<Type, TypeAdapter<dynamic>> entry in typeToTypeAdapter.entries) {
+  static void _registerAdapters({required Map<Type, TypeAdapter> typeToTypeAdapter}) {
+    for (MapEntry<Type, TypeAdapter> entry in typeToTypeAdapter.entries) {
       Hive.registerAdapter(entry.value);
     }
   }
@@ -52,8 +52,7 @@ class HiveBase extends LocalDataSourceAbstract {
     return true;
   }
 
-  static Future<void> init(
-      {required String securityKey, required Map<Type, TypeAdapter<dynamic>> typeToTypeAdapters}) async {
+  static Future<void> init({required String securityKey, required Map<Type, TypeAdapter> typeToTypeAdapters}) async {
     if (_noneBoxOpened()) {
       await Hive.initFlutter();
       _registerAdapters(typeToTypeAdapter: typeToTypeAdapters);
