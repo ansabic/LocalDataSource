@@ -9,7 +9,7 @@ class HiveBase extends LocalDataSourceAbstract {
     return _hiveBase;
   }
 
-  static final Iterable<Type> _boxes = [];
+  static final List<Type> _boxes = [];
 
   ///Securely opens each box with the same encryption key.
   static Future<void> openBoxes({required String? securityKey}) async {
@@ -43,6 +43,7 @@ class HiveBase extends LocalDataSourceAbstract {
 
   static void registerAdapter<T>({required TypeAdapter<T> adapter}) {
     Hive.registerAdapter<T>(adapter);
+    _boxes.add(T.runtimeType);
   }
 
   static Future<void> init() async => await Hive.initFlutter();
