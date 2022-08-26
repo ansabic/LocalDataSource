@@ -7,7 +7,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 part 'hive_base.dart';
-
 part 'local_data_source_abstract.dart';
 
 abstract class LocalDataSource {
@@ -21,8 +20,7 @@ abstract class LocalDataSource {
   ///
   /// After initialization you are ready to use this lib with basic CRUD 'ofType' methods available in this class
   /// which you can additionally wrap with corresponding type-defined repositories.
-  static Future<void> init(
-          {required String securityKey, required Map<Type, TypeAdapter<dynamic>> typeToTypeAdapters}) async =>
+  static Future<void> init({required String securityKey, required Map<Type, TypeAdapter> typeToTypeAdapters}) async =>
       await HiveBase.init(securityKey: securityKey, typeToTypeAdapters: typeToTypeAdapters);
 
   static Future<int> addItemOfType<T>(T item) async => await HiveBase().addItemOfType<T>(item);
