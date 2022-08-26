@@ -9,3 +9,7 @@
 ## 0.0.4
 
 * Removed dynamic type for TypeAdapters.
+
+## 0.0.5
+
+* Moved to builder flow since registering dynamic type adapters doesn't work.
