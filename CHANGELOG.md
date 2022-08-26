@@ -17,3 +17,7 @@
 ## 0.0.6
 
 * Properly opens boxes now.
+
+## 0.0.6
+
+* Type not being added to cache.
