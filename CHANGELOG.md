@@ -21,3 +21,7 @@
 ## 0.0.7
 
 * Type not being added to cache.
+
+## 0.0.8
+
+box names saved instead of types.
