@@ -1,6 +1,6 @@
 name: local_data_source
 description: Simple local data source wrap of hive.
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/ansabic/LocalDataSource
 
 environment:
