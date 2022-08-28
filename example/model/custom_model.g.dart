@@ -25,7 +25,8 @@ class CustomModelAdapter extends TypeAdapter<CustomModel> {
   @override
   void write(BinaryWriter writer, CustomModel obj) {
     writer
-      ..writeByte(2)..writeByte(0)
+      ..writeByte(2)
+      ..writeByte(0)
       ..write(obj.first)
       ..writeByte(1)
       ..write(obj.second);
@@ -37,7 +38,5 @@ class CustomModelAdapter extends TypeAdapter<CustomModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is CustomModelAdapter &&
-              runtimeType == other.runtimeType &&
-              typeId == other.typeId;
+      other is CustomModelAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }
