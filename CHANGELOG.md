@@ -29,3 +29,8 @@
 ## 0.0.9
 
 * Saving String instead of runtimeType.
+
+## 1.0.0
+
+* First stable version working properly. Reverted to Hive usage directly due to impossibility of
+  creating abstraction models of data entities.
