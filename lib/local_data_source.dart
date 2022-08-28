@@ -12,7 +12,6 @@ export 'package:hive/hive.dart';
 export 'package:hive_flutter/hive_flutter.dart';
 
 part 'hive_base.dart';
-
 part 'local_data_source_abstract.dart';
 
 class LocalDataSourceBuilder {
