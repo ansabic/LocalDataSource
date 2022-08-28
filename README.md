@@ -19,9 +19,11 @@ Hive annotations as you would basically using Hive. Example of class setup:
     part 'custom_model.g.dart';
 
     @HiveType(typeId: 0)
-    class CustomModel extends Equatable { @HiveField(0)
-    final String first; @HiveField(1)
-    final double second;
+    class CustomModel extends Equatable { 
+        @HiveField(0)
+        final String first; 
+        @HiveField(1)
+        final double second;
 
         const CustomModel({required this.first,required this.second});
 
@@ -41,11 +43,13 @@ TypeAdapters needed(type-defined) and you are ready to go.
 
 Basic setup should look like this:
 
-    void main() async { await LocalDataSource.builder( (builder) async {
-        builder.appendAdapter<CustomModel>(adapter: CustomModelAdapter());
-        builder.appendAdapter<SecondModel>(adapter: SecondModelAdapter()); await builder.build(); 
-    });
-    runApp(const MyApp());
+    void main() async { 
+        await LocalDataSource.builder( (builder) async {
+            builder.appendAdapter<CustomModel>(adapter: CustomModelAdapter());
+            builder.appendAdapter<SecondModel>(adapter: SecondModelAdapter());
+            await builder.build(); 
+        });
+        runApp(const MyApp());
     }
 
 After this you can use CRUD-based methods from LocalDataSource anywhere you want.
