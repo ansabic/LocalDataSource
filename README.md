@@ -14,21 +14,21 @@ one entity in hive, defined by TypeAdapter).
 You will still have to add dependencies(if you didn't) for build_runner and hive_generator and use
 Hive annotations as you would basically using Hive. Example of class setup:
 
-import 'package:local_data_source/local_data_source.dart';
+    import 'package:local_data_source/local_data_source.dart';
 
-part 'custom_model.g.dart';
+    part 'custom_model.g.dart';
 
-@HiveType(typeId: 0)
-class CustomModel extends Equatable { @HiveField(0)
-final String first; @HiveField(1)
-final double second;
+    @HiveType(typeId: 0)
+    class CustomModel extends Equatable { @HiveField(0)
+    final String first; @HiveField(1)
+    final double second;
 
-    const CustomModel({required this.first,required this.second});
+        const CustomModel({required this.first,required this.second});
 
-    @override
-    List<Object?> get props => [first, second];
+        @override
+        List<Object?> get props => [first, second];
 
-}
+    }
 
 Before initializing LocalDataSource make sure you have all Hive types with its' type adapters
 generated with "flutter pub run build_runner build --delete-conflicting-issues". Adjust according to
@@ -41,10 +41,12 @@ TypeAdapters needed(type-defined) and you are ready to go.
 
 Basic setup should look like this:
 
-void main() async { await LocalDataSource.builder( (builder) async {
-builder.appendAdapter<CustomModel>(adapter: CustomModelAdapter());
-builder.appendAdapter<SecondModel>(adapter: SecondModelAdapter()); await builder.build(); });
-runApp(const MyApp()); }
+    void main() async { await LocalDataSource.builder( (builder) async {
+        builder.appendAdapter<CustomModel>(adapter: CustomModelAdapter());
+        builder.appendAdapter<SecondModel>(adapter: SecondModelAdapter()); await builder.build(); 
+    });
+    runApp(const MyApp());
+    }
 
 After this you can use CRUD-based methods from LocalDataSource anywhere you want.
 
