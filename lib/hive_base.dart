@@ -41,8 +41,7 @@ class HiveBase extends LocalDataSourceAbstract {
     }
   }
 
-  static void registerAdapter<T>({required TypeAdapter<T> adapter}) {
-    Hive.registerAdapter<T>(adapter);
+  static void registerType<T>() {
     _boxNames.add(T.toString());
   }
 
@@ -51,17 +50,17 @@ class HiveBase extends LocalDataSourceAbstract {
   Box<dynamic>? _getProperBox<T>() => Hive.box(T.toString());
 
   @override
-  Future<int> addItemOfType<T>(T item) async {
+  Future<int> addItemOfType<T extends Equatable>(T item) async {
     return await _getProperBox<T>()?.add(item) ?? -1;
   }
 
   @override
-  Future<Iterable<int>> addItemsOfType<T>(List<T> items) async {
+  Future<Iterable<int>> addItemsOfType<T extends Equatable>(List<T> items) async {
     return await _getProperBox<T>()?.addAll(items) ?? const Iterable.empty();
   }
 
   @override
-  Future<void> deleteAllOfType<T>() async {
+  Future<void> deleteAllOfType<T extends Equatable>() async {
     final keys = _getProperBox<T>()?.keys ?? [];
     for (dynamic key in keys) {
       await _getProperBox<T>()?.delete(key);
@@ -69,9 +68,9 @@ class HiveBase extends LocalDataSourceAbstract {
   }
 
   @override
-  Future<void> deleteItemOfType<T>(T item) async {
+  Future<void> deleteItemOfType<T extends Equatable>(T item) async {
     final box = _getProperBox<T>();
-    final existing = _getProperBox<T>()?.values.firstWhereOrNull((element) => element == item);
+    final existing = box?.values.firstWhereOrNull((element) => element == item);
     final index = box?.values.toList().indexOf(existing);
     if (index != null) {
       await box?.deleteAt(index);
@@ -79,12 +78,12 @@ class HiveBase extends LocalDataSourceAbstract {
   }
 
   @override
-  List<T> getAllOfType<T>() {
+  List<T> getAllOfType<T extends Equatable>() {
     return _getProperBox<T>()?.values.toList().cast<T>() ?? [];
   }
 
   @override
-  Stream<T>? watchAllOfType<T>() {
+  Stream<T>? watchAllOfType<T extends Equatable>() {
     return _getProperBox<T>()?.watch().cast<T>();
   }
 }

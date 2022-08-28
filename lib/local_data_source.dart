@@ -3,17 +3,16 @@ library local_data_source;
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 part 'hive_base.dart';
-
 part 'local_data_source_abstract.dart';
 
 class LocalDataSourceBuilder {
-  LocalDataSourceBuilder appendAdapter<T>({required TypeAdapter<T> adapter}) {
-    HiveBase.registerAdapter<T>(adapter: adapter);
-    return this;
+  void appendAdapter<T>({required TypeAdapter<T> adapter}) {
+    HiveBase.registerType<T>();
   }
 
   Future<void> build({String? securityKey}) async => await HiveBase.openBoxes(securityKey: securityKey);
@@ -34,21 +33,22 @@ abstract class LocalDataSource {
   ///
   /// After initialization you are ready to use this lib with basic CRUD 'ofType' methods available in this class
   /// which you can additionally wrap with corresponding type-defined repositories.
-  static Future<LocalDataSourceBuilder> builder() async {
-    await HiveBase.init();
-    _builder = LocalDataSourceBuilder();
-    return _builder;
-  }
+  static Future<void> builder(Function(LocalDataSourceBuilder builder) initializationDone) async =>
+      await HiveBase.init().then((value) {
+        _builder = LocalDataSourceBuilder();
+        initializationDone(_builder);
+      });
 
-  static Future<int> addItemOfType<T>(T item) async => await HiveBase().addItemOfType<T>(item);
+  static Future<int> addItemOfType<T extends Equatable>(T item) async => await HiveBase().addItemOfType<T>(item);
 
-  static Future<Iterable<int>> addItemsOfType<T>(List<T> items) async => await HiveBase().addItemsOfType<T>(items);
+  static Future<Iterable<int>> addItemsOfType<T extends Equatable>(List<T> items) async =>
+      await HiveBase().addItemsOfType<T>(items);
 
-  static Future<void> deleteItemOfType<T>(T item) async => await HiveBase().deleteAllOfType<T>();
+  static Future<void> deleteItemOfType<T extends Equatable>(T item) async => await HiveBase().deleteAllOfType<T>();
 
-  static Future<void> deleteAllOfType<T>() async => HiveBase().deleteAllOfType<T>();
+  static Future<void> deleteAllOfType<T extends Equatable>() async => HiveBase().deleteAllOfType<T>();
 
-  static List<T> getAllOfType<T>() => HiveBase().getAllOfType<T>();
+  static List<T> getAllOfType<T extends Equatable>() => HiveBase().getAllOfType<T>();
 
-  static Stream<T>? watchAllOfType<T>() => HiveBase().watchAllOfType<T>();
+  static Stream<T>? watchAllOfType<T extends Equatable>() => HiveBase().watchAllOfType<T>();
 }
