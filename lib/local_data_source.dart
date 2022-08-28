@@ -7,12 +7,17 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+export 'package:equatable/equatable.dart';
+export 'package:hive/hive.dart';
+export 'package:hive_flutter/hive_flutter.dart';
+
 part 'hive_base.dart';
+
 part 'local_data_source_abstract.dart';
 
 class LocalDataSourceBuilder {
   void appendAdapter<T>({required TypeAdapter<T> adapter}) {
-    HiveBase.registerType<T>();
+    HiveBase.registerType<T>(adapter: adapter);
   }
 
   Future<void> build({String? securityKey}) async => await HiveBase.openBoxes(securityKey: securityKey);
@@ -33,11 +38,11 @@ abstract class LocalDataSource {
   ///
   /// After initialization you are ready to use this lib with basic CRUD 'ofType' methods available in this class
   /// which you can additionally wrap with corresponding type-defined repositories.
-  static Future<void> builder(Function(LocalDataSourceBuilder builder) initializationDone) async =>
-      await HiveBase.init().then((value) {
-        _builder = LocalDataSourceBuilder();
-        initializationDone(_builder);
-      });
+  static Future<void> builder(Function(LocalDataSourceBuilder builder) initializationDone) async {
+    await HiveBase.init();
+    _builder = LocalDataSourceBuilder();
+    initializationDone(_builder);
+  }
 
   static Future<int> addItemOfType<T extends Equatable>(T item) async => await HiveBase().addItemOfType<T>(item);
 
