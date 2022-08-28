@@ -19,7 +19,8 @@ class LocalDataSourceBuilder {
     HiveBase.registerType<T>(adapter: adapter);
   }
 
-  Future<void> build({String? securityKey}) async => await HiveBase.openBoxes(securityKey: securityKey);
+  Future<void> build({String? securityKey}) async =>
+      await HiveBase.openBoxes(securityKey: securityKey);
 }
 
 abstract class LocalDataSource {
@@ -37,22 +38,29 @@ abstract class LocalDataSource {
   ///
   /// After initialization you are ready to use this lib with basic CRUD 'ofType' methods available in this class
   /// which you can additionally wrap with corresponding type-defined repositories.
-  static Future<void> builder(Function(LocalDataSourceBuilder builder) initializationDone) async {
+  static Future<void> builder(
+      Function(LocalDataSourceBuilder builder) initializationDone) async {
     await HiveBase.init();
     _builder = LocalDataSourceBuilder();
     initializationDone(_builder);
   }
 
-  static Future<int> addItemOfType<T extends Equatable>(T item) async => await HiveBase().addItemOfType<T>(item);
+  static Future<int> addItemOfType<T extends Equatable>(T item) async =>
+      await HiveBase().addItemOfType<T>(item);
 
-  static Future<Iterable<int>> addItemsOfType<T extends Equatable>(List<T> items) async =>
+  static Future<Iterable<int>> addItemsOfType<T extends Equatable>(
+          List<T> items) async =>
       await HiveBase().addItemsOfType<T>(items);
 
-  static Future<void> deleteItemOfType<T extends Equatable>(T item) async => await HiveBase().deleteAllOfType<T>();
+  static Future<void> deleteItemOfType<T extends Equatable>(T item) async =>
+      await HiveBase().deleteAllOfType<T>();
 
-  static Future<void> deleteAllOfType<T extends Equatable>() async => HiveBase().deleteAllOfType<T>();
+  static Future<void> deleteAllOfType<T extends Equatable>() async =>
+      HiveBase().deleteAllOfType<T>();
 
-  static List<T> getAllOfType<T extends Equatable>() => HiveBase().getAllOfType<T>();
+  static List<T> getAllOfType<T extends Equatable>() =>
+      HiveBase().getAllOfType<T>();
 
-  static Stream<T>? watchAllOfType<T extends Equatable>() => HiveBase().watchAllOfType<T>();
+  static Stream<T>? watchAllOfType<T extends Equatable>() =>
+      HiveBase().watchAllOfType<T>();
 }

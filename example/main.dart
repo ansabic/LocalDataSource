@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:local_data_source/local_data_source.dart';
 
-import '../example/model/custom_model.dart';
-import '../example/model/second_model.dart';
+import 'custom_model.dart';
+import 'second_model.dart';
 
 void main() async {
   await LocalDataSource.builder(

@@ -38,5 +38,7 @@ class CustomModelAdapter extends TypeAdapter<CustomModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CustomModelAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is CustomModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

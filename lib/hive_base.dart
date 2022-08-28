@@ -61,7 +61,8 @@ class HiveBase extends LocalDataSourceAbstract {
   }
 
   @override
-  Future<Iterable<int>> addItemsOfType<T extends Equatable>(List<T> items) async {
+  Future<Iterable<int>> addItemsOfType<T extends Equatable>(
+      List<T> items) async {
     return await _getProperBox<T>()?.addAll(items) ?? const Iterable.empty();
   }
 
